@@ -1,4 +1,5 @@
 require 'date'
+require 'bigdecimal'
 require 'multi_json'
 
 module FreeAgent
@@ -6,17 +7,18 @@ module FreeAgent
     attr_accessor :id
 
     def initialize(attrs={})
+
       attrs.each { |key,val| send("#{key}=", val) if respond_to?("#{key}=") }
     end
 
     def self.find(id)
-      response = FreeAgent.client.get(@@end_point[:plural] + '/' + id.to_s)
-      self.new(response[@@end_point[:single]])
+      response = FreeAgent.client.get(endpoint[:plural] + '/' + id.to_s)
+      self.new(response[endpoint[:single]])
     end
 
     def self.all
-      response = FreeAgent.client.get(@@end_point[:plural])
-      response[@@end_point[:plural]].collect { |r| self.new(r) }
+      response = FreeAgent.client.get(endpoint[:plural])
+      response[endpoint[:plural]].collect { |r| self.new(r) }
     end
 
     def self.create(attrs = {})
@@ -52,17 +54,60 @@ module FreeAgent
     def to_json
       MultiJson.encode(to_hash)
     end
+    
+    class << self
+      attr_accessor :endpoint
+    end
 
     def self.resource(resource, opts = {})
-      @@resource = {:single => end_point, :plural => (opts[:plural] || end_point + 's') }
+      self.endpoint = {:single => resource.to_s, :plural => (opts[:plural] || resource.to_s + 's') }
+    end
+
+    def self.decimal_accessor(*args)
+      decimal_reader(*args)
+      decimal_writer(*args)
+    end
+
+    def self.decimal_reader(*args)
+      attr_reader(*args)
+    end
+
+    def self.decimal_writer(*args)
+      args.each do |attr|
+        define_method("#{attr.to_s}=".to_sym) do |decimal|
+          decimal = decimal.is_a?(BigDecimal) ? decimal : BigDecimal.new(decimal)
+          instance_variable_set("@#{attr}", decimal)
+        end
+      end
+    end
+    def self.integer_accessor(*args)
+      integer_reader(*args)
+      integer_writer(*args)
+    end
+
+    def self.integer_reader(*args)
+      attr_reader(*args)
+    end
+
+    def self.integer_writer(*args)
+      args.each do |attr|
+        define_method("#{attr.to_s}=".to_sym) do |int|
+          int = int.is_a?(Fixnum) ? int : int.to_i
+          instance_variable_set("@#{attr}", int)
+        end
+      end
     end
 
     def self.date_accessor(*args)
-      attr_reader(*args)
+      date_reader(*args)
       date_writer(*args)
     end
 
-    def self.date_writer
+    def self.date_reader(*args)
+      attr_reader(*args)
+    end
+
+    def self.date_writer(*args)
       args.each do |attr|
         define_method("#{attr.to_s}=".to_sym) do |date|
           date = date.is_a?(String) ? DateTime.parse(date) : date

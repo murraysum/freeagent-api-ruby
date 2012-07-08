@@ -2,17 +2,21 @@ module FreeAgent
   class User < Resource
     resource :user 
 
-    attr_accessor :first_name, :last_name, :email, :role, :opening_mileage
-    attr_writer :permission_level, :password, :password_confirmation, :ni_number
+    attr_accessor :first_name, :last_name, :email, :role
+    attr_writer :permission_level, :password, :password_confirmation
 
-    date_reader :updated_at, :created_at
+    decimal_accessor :opening_mileage
+    integer_accessor :ni_number, :permission_level
 
-    def permission_level
-      @permissions[@permisison_level] if @permission_level 
+    date_accessor :updated_at, :created_at
+
+    def permission
+      puts @permission_level
+      permissions[@permission_level] if @permission_level 
     end
 
     def self.me
-      # TODO 
+      User.new(FreeAgent.client.get('users/me')["user"])
     end
 
     private

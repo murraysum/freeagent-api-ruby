@@ -59,25 +59,26 @@ module FreeAgent
     end
 
     def get(path, params={})
-      request(:get, "#{base_url}#{path}", :params => params).parsed
+      request(:get, "#{Client.site}#{path}", :params => params).parsed
     end
 
     def post(path, data={})
-      request(:post, "#{self.base_url}#{path}", :data => data).parsed
+      request(:post, "#{Client.site}#{path}", :data => data).parsed
     end
 
     def put(path, data={})
-      request(:put, "#{self.base_url}#{path}", :data => data).parsed
+      request(:put, "#{Client.site}#{path}", :data => data).parsed
     end
 
     def delete(path, data={})
-      request(:delete, "#{self.base_url}#{path}", :data => data).parsed
+      request(:delete, "#{Client.site}#{path}", :data => data).parsed
     end
 
   private
 
     def request(method, path, options = {})
       if @access_token
+        puts path
         options[:data] = MultiJson.encode(options[:data]) unless options[:data].nil? 
         @access_token.send(method, path, options)
       else
