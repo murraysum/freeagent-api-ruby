@@ -1,10 +1,8 @@
 module FreeAgent
   class Attachment < Resource
     resource :attachment
-    
-    attr_reader :content_src, :content_type, :file_name, :file_size
+    resource_methods :find, :delete
 
-   # creatable(false)
-    #updatable(false)
+    attr_reader :content_src, :content_type, :file_name, :file_size
   end
 end

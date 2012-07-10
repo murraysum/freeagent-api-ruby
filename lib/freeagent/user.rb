@@ -1,6 +1,7 @@
 module FreeAgent
   class User < Resource
-    resource :user 
+    resource :user
+    resource_methods :find, :all, :delete, :update, :create
 
     attr_accessor :first_name, :last_name, :email, :role
     attr_writer :permission_level, :password, :password_confirmation

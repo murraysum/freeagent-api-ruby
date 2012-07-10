@@ -7,28 +7,11 @@ module FreeAgent
     attr_accessor :id
 
     def initialize(attrs={})
-
       attrs.each { |key,val| send("#{key}=", val) if respond_to?("#{key}=") }
-    end
-
-    def self.find(id)
-      response = FreeAgent.client.get(endpoint[:plural] + '/' + id.to_s)
-      self.new(response[endpoint[:single]])
-    end
-
-    def self.all
-      response = FreeAgent.client.get(endpoint[:plural])
-      response[endpoint[:plural]].collect { |r| self.new(r) }
     end
 
     def self.create(attrs = {})
       self.new(attrs).save
-    end
-
-    def delete
-      path = endpoint + '/' + id.to_s
-      response = FreeAgent.client.delete(path)
-      # TODO
     end
 
     def save
@@ -57,6 +40,18 @@ module FreeAgent
     
     class << self
       attr_accessor :endpoint
+    end
+
+    def self.resource_methods(*args)
+      if args.include? :default
+        define_all
+        define_find
+        define_delete
+      else
+        define_all if args.include? :all
+        define_find if args.include? :find
+        define_delete if args.include? :delete
+      end
     end
 
     def self.resource(resource, opts = {})
@@ -120,10 +115,32 @@ module FreeAgent
 
     def save_data(data)
       if persisted?
-        response = client.put((resource + '/' + id.to_s), data)
+        response = FreeAgent.client.put((resource + '/' + id.to_s), data)
       else
-        response = client.post(resource, data)
+        response = FreeAgent.client.post(resource, data)
       end
     end
+
+    def self.define_all
+      self.define_singleton_method(:all) do
+        response = FreeAgent.client.get(endpoint[:plural])
+        response[endpoint[:plural]].collect { |r| self.new(r) }
+      end
+    end
+
+    def self.define_find
+      self.define_singleton_method(:find) do |id|
+        response = FreeAgent.client.get(endpoint[:plural] + '/' + id.to_s)
+        self.new(response[endpoint[:single]])
+      end
+    end
+
+    def self.define_delete
+      define_method(:delete) do
+        path = endpoint + '/' + id.to_s
+        response = FreeAgent.client.delete(path)
+      end
+    end
+
   end
 end
