@@ -154,16 +154,14 @@ module FreeAgent
       end
     end
 
-    # TODO
     def self.define_update
       define_method(:update_attributes) do |attributes|
-        data = {self.class.endpoint[:single] => attributes}
-        # FIXME Fix the parsing of the id
-        id = nil
+        data = { self.class.endpoint[:single] => attributes }
         response = FreeAgent.client.put("#{self.class.endpoint[:plural]}/#{id}", data)
       end
     end
 
+    # TODO
     def self.define_delete
       define_method(:delete) do
         path = endpoint + '/' + id.to_s
