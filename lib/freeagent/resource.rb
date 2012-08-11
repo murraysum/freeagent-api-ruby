@@ -112,6 +112,9 @@ module FreeAgent
       end
     end
 
+    def self.hello
+      puts "hello"
+    end
     def self.define_all
       self.define_singleton_method(:all) do
         response = FreeAgent.client.get(endpoint[:plural])
