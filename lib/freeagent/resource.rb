@@ -4,7 +4,7 @@ require 'multi_json'
 
 module FreeAgent
   class Resource
-    attr_accessor :id
+    attr_accessor :url
 
     def initialize(attrs={})
       attrs.each { |key,val| send("#{key}=", val) if respond_to?("#{key}=") }
