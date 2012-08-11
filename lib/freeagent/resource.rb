@@ -51,6 +51,7 @@ module FreeAgent
         define_all if args.include? :all
         define_find if args.include? :find
         define_delete if args.include? :delete
+        define_filter if args.include? :filter
       end
     end
 
@@ -72,23 +73,6 @@ module FreeAgent
         define_method("#{attr.to_s}=".to_sym) do |decimal|
           decimal = decimal.is_a?(BigDecimal) ? decimal : BigDecimal.new(decimal)
           instance_variable_set("@#{attr}", decimal)
-        end
-      end
-    end
-    def self.integer_accessor(*args)
-      integer_reader(*args)
-      integer_writer(*args)
-    end
-
-    def self.integer_reader(*args)
-      attr_reader(*args)
-    end
-
-    def self.integer_writer(*args)
-      args.each do |attr|
-        define_method("#{attr.to_s}=".to_sym) do |int|
-          int = int.is_a?(Fixnum) ? int : int.to_i
-          instance_variable_set("@#{attr}", int)
         end
       end
     end
@@ -128,9 +112,15 @@ module FreeAgent
       end
     end
 
+    def self.define_filter
+      self.define_singleton_method(:filter) do |params|
+        response = FreeAgent.client.get("#{endpoint[:plural]}/", params)
+        response[:endpoint[:plural]].collect{ |r| self.new(r) }
+      end
+    end
     def self.define_find
       self.define_singleton_method(:find) do |id|
-        response = FreeAgent.client.get(endpoint[:plural] + '/' + id.to_s)
+        response = FreeAgent.client.get("#{endpoint[:plural]}/#{id}")
         self.new(response[endpoint[:single]])
       end
     end
