@@ -161,13 +161,10 @@ module FreeAgent
       end
     end
 
-    # TODO
     def self.define_delete
       define_method(:delete) do
-        path = endpoint + '/' + id.to_s
-        response = FreeAgent.client.delete(path)
+        response = FreeAgent.client.delete("#{self.class.endpoint[:plural]}/#{id}")
       end
     end
-
   end
 end
