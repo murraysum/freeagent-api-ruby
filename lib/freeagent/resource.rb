@@ -1,13 +1,23 @@
 require 'date'
+require 'uri'
 require 'bigdecimal'
 require 'multi_json'
 
 module FreeAgent
   class Resource
     attr_accessor :url
+    attr_reader :id
 
     def initialize(attrs={})
-      attrs.each { |key,val| send("#{key}=", val) if respond_to?("#{key}=") }
+      attrs.each do |key,val|
+        send("#{key}=", val) if respond_to?("#{key}=")
+        @id = extract_id(val) if key == 'url'
+      end
+
+    end
+
+    def extract_id(uri)
+      URI(uri).path.split('/').last.to_i
     end
 
     # TODO
@@ -102,6 +112,9 @@ module FreeAgent
       end
     end
 
+    def self.hello
+      puts "hello"
+    end
     def self.define_all
       self.define_singleton_method(:all) do
         response = FreeAgent.client.get(endpoint[:plural])
