@@ -8,6 +8,7 @@ module FreeAgent
 
   class << self
     attr_accessor :environment
+    attr_accessor :debug
     attr_reader :client
     
     def access_details(client_id, client_secret, access_token=nil)

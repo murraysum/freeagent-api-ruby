@@ -1,18 +1,21 @@
+require 'multi_json'
 
 module FreeAgent
   class ApiError < StandardError
-    attr_reader :response, :code
+    attr_reader :response, :status, :errors
 
     def initialize(response)
-      # TODO
+      @response = response
+      @status = response.status
+      @errors = MultiJson.decode(response.body) rescue nil
     end
 
     def to_s
-      # TODO
+      inspect
     end
 
     def inspect
-      # TODO
+      "#<#{self.class}: response: #{response}, status: #{status}, errors: #{errors} >"
     end
   end
 

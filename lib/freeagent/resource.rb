@@ -1,39 +1,23 @@
 require 'date'
+require 'uri'
 require 'bigdecimal'
 require 'multi_json'
 
 module FreeAgent
   class Resource
-    attr_accessor :id
+    attr_accessor :url
+    attr_reader :id
 
     def initialize(attrs={})
+      attrs.each do |key,val|
+        send("#{key}=", val) if respond_to?("#{key}=")
+        @id = extract_id(val) if key == 'url'
+      end
 
-      attrs.each { |key,val| send("#{key}=", val) if respond_to?("#{key}=") }
     end
 
-    def self.find(id)
-      response = FreeAgent.client.get(endpoint[:plural] + '/' + id.to_s)
-      self.new(response[endpoint[:single]])
-    end
-
-    def self.all
-      response = FreeAgent.client.get(endpoint[:plural])
-      response[endpoint[:plural]].collect { |r| self.new(r) }
-    end
-
-    def self.create(attrs = {})
-      self.new(attrs).save
-    end
-
-    def delete
-      path = endpoint + '/' + id.to_s
-      response = FreeAgent.client.delete(path)
-      # TODO
-    end
-
-    def save
-      # TODO Finish
-      save_date to_hash
+    def extract_id(uri)
+      URI(uri).path.split('/').last.to_i
     end
 
     def persisted?
@@ -63,6 +47,24 @@ module FreeAgent
       self.endpoint = {:single => resource.to_s, :plural => (opts[:plural] || resource.to_s + 's') }
     end
 
+    def self.resource_methods(*args)
+      if args.include? :default
+        define_all
+        define_filter
+        define_find
+        define_create_and_save
+        define_update
+        define_delete
+      else
+        define_all if args.include? :all
+        define_filter if args.include? :filter
+        define_find if args.include? :find
+        define_create_and_save if args.include? :create
+        define_update if args.include? :update
+        define_delete if args.include? :delete
+      end
+    end
+    
     def self.decimal_accessor(*args)
       decimal_reader(*args)
       decimal_writer(*args)
@@ -77,23 +79,6 @@ module FreeAgent
         define_method("#{attr.to_s}=".to_sym) do |decimal|
           decimal = decimal.is_a?(BigDecimal) ? decimal : BigDecimal.new(decimal)
           instance_variable_set("@#{attr}", decimal)
-        end
-      end
-    end
-    def self.integer_accessor(*args)
-      integer_reader(*args)
-      integer_writer(*args)
-    end
-
-    def self.integer_reader(*args)
-      attr_reader(*args)
-    end
-
-    def self.integer_writer(*args)
-      args.each do |attr|
-        define_method("#{attr.to_s}=".to_sym) do |int|
-          int = int.is_a?(Fixnum) ? int : int.to_i
-          instance_variable_set("@#{attr}", int)
         end
       end
     end
@@ -118,11 +103,63 @@ module FreeAgent
 
     private
 
-    def save_data(data)
-      if persisted?
-        response = client.put((resource + '/' + id.to_s), data)
-      else
-        response = client.post(resource, data)
+    def self.define_all
+      self.define_singleton_method(:all) do
+        response = FreeAgent.client.get(endpoint[:plural])
+        response[endpoint[:plural]].collect { |r| self.new(r) }
+      end
+    end
+
+    def self.define_filter
+      self.define_singleton_method(:filter) do |params|
+        response = FreeAgent.client.get("#{endpoint[:plural]}/", params)
+        response[:endpoint[:plural]].collect{ |r| self.new(r) }
+      end
+    end
+
+    def self.define_find
+      self.define_singleton_method(:find) do |id|
+        begin
+          response = FreeAgent.client.get("#{endpoint[:plural]}/#{id}")
+          self.new(response[endpoint[:single]])
+        rescue FreeAgent::ApiError => error
+          nil
+        end
+      end
+    end
+
+    def self.define_create_and_save
+      self.define_singleton_method(:create) do |attributes|
+        data = { endpoint[:single].to_sym => attributes }
+        response = FreeAgent.client.post(endpoint[:plural], data)
+        self.new(response[endpoint[:single]])
+      end
+
+      define_method(:save) do
+        begin
+          data = { self.class.endpoint[:single].to_sym => self.to_hash }
+          if persisted?
+            FreeAgent.client.put("#{self.class.endpoint[:plural]}/#{id}", data)            
+          else
+            FreeAgent.client.post(self.class.endpoint[:plural], data)
+          end
+          true
+        rescue FreeAgent::ApiError => error
+          false
+        end
+      end
+    end
+
+    def self.define_update
+      define_method(:update_attributes) do |attributes|
+        data = { self.class.endpoint[:single] => attributes }
+        response = FreeAgent.client.put("#{self.class.endpoint[:plural]}/#{id}", data)
+      end
+    end
+
+    def self.define_delete
+      define_method(:delete) do
+        response = FreeAgent.client.delete("#{self.class.endpoint[:plural]}/#{id}")
       end
     end
   end

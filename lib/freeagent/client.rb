@@ -39,7 +39,7 @@ module FreeAgent
     end
 
     def self.connection_opts
-      { :headers => { :user_agent => "freeagent-api-rb", :accept => "application/json" } }
+      { :headers => { :user_agent => "freeagent-api-rb", :accept => "application/json", :content_type => "application/json" } }
     end
     
     def fetch_access_token(auth_code, options)
@@ -78,14 +78,15 @@ module FreeAgent
 
     def request(method, path, options = {})
       if @access_token
-        puts path
-        options[:data] = MultiJson.encode(options[:data]) unless options[:data].nil? 
+        options[:body] = MultiJson.encode(options[:data]) unless options[:data].nil?
         @access_token.send(method, path, options)
       else
         raise FreeAgent::ClientError.new('Access Token not set')
       end
     rescue OAuth2::Error => error
-      raise FreeAgent::ApiError.new(error.response)
+      api_error = FreeAgent::ApiError.new(error.response)
+      puts api_error if FreeAgent.debug
+      raise api_error
     end
   end
 end
