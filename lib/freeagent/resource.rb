@@ -20,7 +20,6 @@ module FreeAgent
       URI(uri).path.split('/').last.to_i
     end
 
-    # TODO
     def persisted?
       !id.nil?
     end
@@ -53,14 +52,14 @@ module FreeAgent
         define_all
         define_filter
         define_find
-        define_create
+        define_create_and_save
         define_update
         define_delete
       else
         define_all if args.include? :all
         define_filter if args.include? :filter
         define_find if args.include? :find
-        define_create if args.include? :create
+        define_create_and_save if args.include? :create
         define_update if args.include? :update
         define_delete if args.include? :delete
       end
@@ -104,14 +103,6 @@ module FreeAgent
 
     private
 
-    def save_data(data)
-      if persisted?
-        response = FreeAgent.client.put((resource + '/' + id.to_s), data)
-      else
-        response = FreeAgent.client.post(resource, data)
-      end
-    end
-
     def self.define_all
       self.define_singleton_method(:all) do
         response = FreeAgent.client.get(endpoint[:plural])
@@ -128,29 +119,34 @@ module FreeAgent
 
     def self.define_find
       self.define_singleton_method(:find) do |id|
-        response = FreeAgent.client.get("#{endpoint[:plural]}/#{id}")
-        self.new(response[endpoint[:single]])
+        begin
+          response = FreeAgent.client.get("#{endpoint[:plural]}/#{id}")
+          self.new(response[endpoint[:single]])
+        rescue FreeAgent::ApiError => error
+          nil
+        end
       end
     end
 
-    # TODO
-    def self.define_create
+    def self.define_create_and_save
       self.define_singleton_method(:create) do |attributes|
         data = { endpoint[:single].to_sym => attributes }
         response = FreeAgent.client.post(endpoint[:plural], data)
         self.new(response[endpoint[:single]])
       end
 
-      self.define_singleton_method(:create!) do |attributes|
-        puts "Going to create with exceptions enabled"
-      end
-
       define_method(:save) do
-        puts "Going to save"
-      end
-
-      define_method(:save!) do
-        puts "Going to save with exceptions enabled"
+        begin
+          data = { self.class.endpoint[:single].to_sym => self.to_hash }
+          if persisted?
+            FreeAgent.client.put("#{self.class.endpoint[:plural]}/#{id}", data)            
+          else
+            FreeAgent.client.post(self.class.endpoint[:plural], data)
+          end
+          true
+        rescue FreeAgent::ApiError => error
+          false
+        end
       end
     end
 
