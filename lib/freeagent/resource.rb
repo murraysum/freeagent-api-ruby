@@ -123,6 +123,7 @@ module FreeAgent
           response = FreeAgent.client.get("#{endpoint[:plural]}/#{id}")
           self.new(response[endpoint[:single]])
         rescue FreeAgent::ApiError => error
+          raise error if FreeAgent.debug 
           nil
         end
       end
