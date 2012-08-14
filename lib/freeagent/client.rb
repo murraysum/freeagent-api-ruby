@@ -84,8 +84,9 @@ module FreeAgent
         raise FreeAgent::ClientError.new('Access Token not set')
       end
     rescue OAuth2::Error => error
-      puts error.response.inspect if FreeAgent.debug
-      raise FreeAgent::ApiError.new(error.response)
+      api_error = FreeAgent::ApiError.new(error.response)
+      puts api_error if FreeAgent.debug
+      raise api_error
     end
   end
 end
