@@ -4,6 +4,8 @@ module FreeAgent
 
   require_relative 'freeagent/resource'
   require_relative 'freeagent/user'
+  require_relative 'freeagent/company'
+  require_relative 'freeagent/timeline_item'
 
   class << self
     attr_accessor :environment
