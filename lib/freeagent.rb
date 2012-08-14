@@ -6,6 +6,7 @@ module FreeAgent
   require_relative 'freeagent/user'
   require_relative 'freeagent/company'
   require_relative 'freeagent/timeline_item'
+  require_relative 'freeagent/attachment'
 
   class << self
     attr_accessor :environment
