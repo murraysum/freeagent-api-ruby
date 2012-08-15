@@ -113,7 +113,7 @@ module FreeAgent
     def self.define_filter
       self.define_singleton_method(:filter) do |params|
         response = FreeAgent.client.get("#{endpoint[:plural]}/", params)
-        response[:endpoint[:plural]].collect{ |r| self.new(r) }
+        response[endpoint[:plural]].collect{ |r| self.new(r) }
       end
     end
 
@@ -123,6 +123,7 @@ module FreeAgent
           response = FreeAgent.client.get("#{endpoint[:plural]}/#{id}")
           self.new(response[endpoint[:single]])
         rescue FreeAgent::ApiError => error
+          raise error if FreeAgent.debug 
           nil
         end
       end

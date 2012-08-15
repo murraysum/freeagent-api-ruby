@@ -8,6 +8,8 @@ module FreeAgent
   require_relative 'freeagent/timeline_item'
   require_relative 'freeagent/attachment'
 
+  require_relative 'freeagent/contact'
+
   class << self
     attr_accessor :environment
     attr_accessor :debug
