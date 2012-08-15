@@ -38,7 +38,7 @@ module FreeAgent
   class NotImplemented < StandardError
     attr_reader :message
 
-    def initialized(message)
+    def initialize(message)
       @message = message
     end
 
