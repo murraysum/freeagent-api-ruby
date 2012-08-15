@@ -13,6 +13,8 @@ module FreeAgent
   require_relative 'freeagent/task'
   require_relative 'freeagent/timeslip'
   require_relative 'freeagent/note'
+  require_relative 'freeagent/recurring_invoice'
+
   class << self
     attr_accessor :environment
     attr_accessor :debug
