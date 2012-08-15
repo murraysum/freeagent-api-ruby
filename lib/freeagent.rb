@@ -9,7 +9,7 @@ module FreeAgent
   require_relative 'freeagent/attachment'
 
   require_relative 'freeagent/contact'
-
+  require_relative 'freeagent/project'
   class << self
     attr_accessor :environment
     attr_accessor :debug
