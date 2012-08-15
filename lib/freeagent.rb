@@ -11,6 +11,7 @@ module FreeAgent
   require_relative 'freeagent/contact'
   require_relative 'freeagent/project'
   require_relative 'freeagent/task'
+  require_relative 'freeagent/timeslip'
   class << self
     attr_accessor :environment
     attr_accessor :debug
