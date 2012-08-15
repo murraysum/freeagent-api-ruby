@@ -10,6 +10,7 @@ module FreeAgent
 
   require_relative 'freeagent/contact'
   require_relative 'freeagent/project'
+  require_relative 'freeagent/task'
   class << self
     attr_accessor :environment
     attr_accessor :debug
