@@ -44,7 +44,7 @@ module FreeAgent
     
     def fetch_access_token(auth_code, options)
       if options[:redirect_uri]
-        @access_token = @client.auth_code.authorize_url(auth_code, options)
+        @access_token = @client.auth_code.get_token(auth_code, options)
       else
         raise FreeAgent::ClientError.new('Redirect uri not specified')
       end
