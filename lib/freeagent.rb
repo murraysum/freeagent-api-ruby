@@ -16,6 +16,7 @@ module FreeAgent
   require_relative 'freeagent/recurring_invoice'
   require_relative 'freeagent/invoice'
   require_relative 'freeagent/bank_account'
+  require_relative 'freeagent/estimate'
 
   class << self
     attr_accessor :environment
