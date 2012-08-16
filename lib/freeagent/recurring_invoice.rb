@@ -24,7 +24,6 @@ module FreeAgent
 
     def self.find_all_by_contact(contact)
       RecurringInvoice.filter(:contact => contact)
-    end    
-    
+    end
   end
 end
