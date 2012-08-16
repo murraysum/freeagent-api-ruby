@@ -34,4 +34,20 @@ module FreeAgent
       # TODO
     end
   end
+
+  class NotImplemented < StandardError
+    attr_reader :message
+
+    def initialize(message)
+      @message = message
+    end
+
+    def to_s
+      message
+    end
+
+    def inspect
+      "#<#{self.class}: message: #{message} >"
+    end
+  end
 end
