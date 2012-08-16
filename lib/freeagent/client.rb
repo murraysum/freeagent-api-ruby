@@ -79,6 +79,7 @@ module FreeAgent
     def request(method, path, options = {})
       if @access_token
         options[:body] = MultiJson.encode(options[:data]) unless options[:data].nil?
+        puts options[:body]
         @access_token.send(method, path, options)
       else
         raise FreeAgent::ClientError.new('Access Token not set')
