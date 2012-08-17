@@ -1,3 +1,4 @@
 .bundle
+.rvmrc
 example.rb
 resource_list
