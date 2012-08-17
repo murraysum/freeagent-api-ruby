@@ -1,10 +1,6 @@
-source  :rubygems
+source "http://rubygems.org"
 
-gem 'oauth2'
-gem 'multi_json'
+# Specify gem dependencies in freeagent-api-ruby.gemspec
+gemspec
 
-group :development do
-  gem 'rspec'
-  gem 'pry'
-end
 
