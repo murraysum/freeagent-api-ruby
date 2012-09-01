@@ -28,5 +28,21 @@ module FreeAgent
       @client = Client.new(client_id, client_secret)
       @client.access_token = access_token if access_token
     end
+
+    def authorize(options)
+      @client.authorize(options)
+    end
+
+    def fetch_access_token(auth_token, options)
+      @client.fetch_access_token(auth_token, options)
+    end
+
+    def access_token=(access_token)
+      @client.access_token = access_token
+    end
+
+    def access_token
+      @client.access_token.token
+    end
   end
 end
