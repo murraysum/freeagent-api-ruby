@@ -7,7 +7,7 @@ class BankTransaction < Resource
   decimal_accessor :amount, :unexplained_amount
 
   date_accessor :dated_on
-  
+
   def self.find_all_by_bank_account(bank_account, options = {})
     options.merge!(:bank_account => bank_account)
     BankTransaction.filter(options) 
@@ -26,5 +26,9 @@ class BankTransaction < Resource
   def self.imported(bank_account, options = {})
     options.merge!(:view => 'imported', :bank_account => bank_account)
     BankTransaction.filter(options)
+  end
+
+  def self.upload_statement(statement, bank_account)
+
   end
 end
