@@ -3,6 +3,11 @@ class BankTransaction < Resource
 
   resource_methods :find, :filter 
 
+  attr_accessor :bank_account, :description, :is_manual, :bank_transactions_explanations
+  decimal_accessor :amount, :unexplained_amount
+
+  date_accessor :dated_on
+  
   def self.find_all_by_bank_account(bank_account, options = {})
     options.merge!(:bank_account => bank_account)
     BankTransaction.filter(options) 
