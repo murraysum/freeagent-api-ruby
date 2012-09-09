@@ -3,19 +3,23 @@ class BankTransaction < Resource
 
   resource_methods :find, :filter 
 
-  def self.find_all_by_bank_account(bank_account)
-    BankTransaction.filter(:bank_account => bank_account) 
+  def self.find_all_by_bank_account(bank_account, options = {})
+    options.merge!(:bank_account => bank_account)
+    BankTransaction.filter(options) 
   end
 
-  def self.unexplained(bank_account)
-    BankTransaction.filter(:view => 'unexplained', :bank_account => bank_account)
+  def self.unexplained(bank_account, options = {})
+    options.merge!(:view => 'unexplained', :bank_account => bank_account)
+    BankTransaction.filter(options)
   end
 
-  def self.manual(bank_account)
-    BankTransaction.filter(:view => 'manual', :bank_account => bank_account)
+  def self.manual(bank_account, options = {})
+    options.merge!(:view => 'manual', :bank_account => bank_account)
+    BankTransaction.filter(options)
   end
 
-  def self.imported(bank_account)
-    BankTransaction.filter(:view => 'imported', :bank_account => bank_account)
+  def self.imported(bank_account, options = {})
+    options.merge!(:view => 'imported', :bank_account => bank_account)
+    BankTransaction.filter(options)
   end
 end
