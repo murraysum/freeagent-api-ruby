@@ -29,6 +29,6 @@ class BankTransaction < Resource
   end
 
   def self.upload_statement(statement, bank_account)
-
+    raise FreeAgent::NotImplemented.new("FIXME Implement")
   end
 end
