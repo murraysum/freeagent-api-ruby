@@ -18,7 +18,7 @@ module FreeAgent
   require_relative 'freeagent/bank_account'
   require_relative 'freeagent/estimate'
   require_relative 'freeagent/expense'
-
+  require_relative 'freeagent/bank_transaction'
   class << self
     attr_accessor :environment
     attr_accessor :debug
