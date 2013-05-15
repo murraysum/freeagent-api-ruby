@@ -22,27 +22,27 @@ module FreeAgent
     end
 
     def self.open_or_overdue
-      Invoice.filter(:view => 'recent_open_or_overdue')
+      Invoice.filter(:view => 'open_or_overdue')
     end
 
     def self.draft
-      Invoice.filter(:view => 'recent_open_or_overdue')
+      Invoice.filter(:view => 'draft')
     end
 
     def self.scheduled_to_email
-      Invoice.filter(:view => 'recent_open_or_overdue')
+      Invoice.filter(:view => 'scheduled_to_email')
     end
 
     def self.thank_you_emails
-      Invoice.filter(:view => 'recent_open_or_overdue')
+      Invoice.filter(:view => 'thank_you_emails')
     end
 
     def self.reminder_emails
-      Invoice.filter(:view => 'recent_open_or_overdue')
+      Invoice.filter(:view => 'reminder_emails')
     end
 
     def self.last_month(n)
-      Invoice.filter(:view => 'recent_open_or_overdue')
+      Invoice.filter(:view => "last_#{n}_months")
     end
 
     def self.find_all_by_contact(contact)
