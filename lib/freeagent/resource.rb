@@ -144,7 +144,7 @@ module FreeAgent
         else
           response = FreeAgent.client.post(self.class.endpoint[:plural], data)
         end
-        self.new(response[endpoint[:single]])
+        self.new(response[self.class.endpoint[:single]])
       end
     end
 
