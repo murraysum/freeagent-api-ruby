@@ -144,6 +144,7 @@ module FreeAgent
         else
           response = FreeAgent.client.post(self.class.endpoint[:plural], data)
         end
+        response = FreeAgent.client.get("#{self.class.endpoint[:plural]}/#{id}")
         self.class.new(response[self.class.endpoint[:single]])
       end
     end
