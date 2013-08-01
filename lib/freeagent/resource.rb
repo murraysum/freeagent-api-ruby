@@ -136,17 +136,18 @@ module FreeAgent
         self.new(response[endpoint[:single]])
       end
 
-      define_method(:save) do
-        data = { self.class.endpoint[:single].to_sym => self.to_hash }
-        response = nil
-        if persisted?
-          response = FreeAgent.client.put("#{self.class.endpoint[:plural]}/#{id}", data)
-        else
-          response = FreeAgent.client.post(self.class.endpoint[:plural], data)
-        end
-        response = FreeAgent.client.get("#{self.class.endpoint[:plural]}/#{id}")
-        self.class.new(response[self.class.endpoint[:single]])
+     define_method(:save) do
+       data = { self.class.endpoint[:single].to_sym => self.to_hash }
+       response = nil
+         if persisted?
+           response = FreeAgent.client.put("#{self.class.endpoint[:plural]}/#{id}", data)
+           response = FreeAgent.client.get("#{self.class.endpoint[:plural]}/#{id}")
+         else
+           response = FreeAgent.client.post(self.class.endpoint[:plural], data)
+         end
+         self.class.new(response[self.class.endpoint[:single]])
       end
+
     end
 
     def self.define_update
