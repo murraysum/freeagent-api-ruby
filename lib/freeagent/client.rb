@@ -49,7 +49,7 @@ module FreeAgent
         raise FreeAgent::ClientError.new('Redirect uri not specified')
       end
     end
-    
+
     def fetch_access_token(auth_code, options)
       if options[:redirect_uri]
         @access_token = @client.auth_code.get_token(auth_code, options)
@@ -64,6 +64,22 @@ module FreeAgent
 
     def access_token=(token)
       @access_token = OAuth2::AccessToken.new(@client, token)
+    end
+
+    def refresh_token
+      @access_token.try(:refresh_token)
+    end
+
+    def refresh_token=(token)
+      if @access_token
+        @access_token.refresh_token = token
+      else
+        raise FreeAgent::ClientError.new('Access Token not specified')
+      end
+    end
+
+    def refresh_access_token!
+      @access_token.refresh!
     end
 
     def get(path, params={})

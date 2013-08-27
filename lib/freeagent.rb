@@ -24,9 +24,10 @@ module FreeAgent
     attr_accessor :debug
     attr_reader :client
     
-    def access_details(client_id, client_secret, access_token=nil)
+    def access_details(client_id, client_secret, access_token=nil, refresh_token=nil)
       @client = Client.new(client_id, client_secret)
       @client.access_token = access_token if access_token
+      @client.refresh_token = refresh_token if refresh_token
     end
 
     def authorize(options)
