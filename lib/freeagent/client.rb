@@ -70,16 +70,13 @@ module FreeAgent
       @access_token.try(:refresh_token)
     end
 
-    def refresh_token=(token)
-      if @access_token
-        @access_token.refresh_token = token
-      else
-        raise FreeAgent::ClientError.new('Access Token not specified')
-      end
-    end
-
-    def refresh_access_token!
-      @access_token.refresh!
+    def refresh_token=(refresh_token)
+      @access_token = OAuth2::AccessToken.new(
+        @client,
+        nil,
+        refresh_token: refresh_token
+      )
+      @access_token = @access_token.refresh!
     end
 
     def get(path, params={})
@@ -98,7 +95,7 @@ module FreeAgent
       request(:delete, "#{Client.site}#{path}", :data => data).parsed
     end
 
-  private
+    private
 
     def request(method, path, options = {})
       if @access_token
