@@ -41,6 +41,14 @@ module FreeAgent
     def self.connection_opts
       { :headers => { :user_agent => "freeagent-api-rb", :accept => "application/json", :content_type => "application/json" } }
     end
+
+    def authorize(options)
+      if options[:redirect_uri]
+        @client.auth_code.authorize_url(options)
+      else
+        raise FreeAgent::ClientError.new('Redirect uri not specified')
+      end
+    end
     
     def fetch_access_token(auth_code, options)
       if options[:redirect_uri]
