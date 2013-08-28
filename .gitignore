@@ -2,3 +2,5 @@
 .rvmrc
 example.rb
 resource_list
+
+Gemfile.lock
