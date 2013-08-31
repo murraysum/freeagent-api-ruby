@@ -58,6 +58,18 @@ module FreeAgent
     #  FreeAgent.client.post("invoices/#{id}/send_email", email)
     #end
 
+    def send(from, to, subject, msg)
+      FreeAgent.client.post("invoices/#{id}/send_email",{
+                  :invoice => {
+                    :email => {
+                      :to => to,
+                      :from => from,
+                      :subject => subject,
+                      :body => msg
+                    } 
+              }})
+    end
+
     def mark_as_sent
       FreeAgent.client.put("invoices/#{id}/transitions/mark_as_sent", nil)
     end
