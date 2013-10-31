@@ -87,8 +87,8 @@ module FreeAgent
     end
 
     def get(path, params={})
-      response = request(:get, "#{Client.site}#{path}", :params => params)
       params = get_default(params)
+      response = request(:get, "#{Client.site}#{path}", :params => params)
 
       if params[:auto_paginate]
         auto_paginate(response, params)
