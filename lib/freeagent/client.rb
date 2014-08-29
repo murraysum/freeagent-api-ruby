@@ -58,8 +58,37 @@ module FreeAgent
       @access_token = OAuth2::AccessToken.new(@client, token)
     end
 
+    def get_default(params)
+      {
+        auto_paginate: true,
+        per_page: 100
+      }.merge params
+    end
+
     def get(path, params={})
-      request(:get, "#{Client.site}#{path}", :params => params).parsed
+      params = get_default(params)
+      response = request(:get, "#{Client.site}#{path}", :params => params)
+
+      if params[:auto_paginate]
+        auto_paginate(response, params)
+      else
+        response.parsed
+      end
+    end
+
+    def auto_paginate(response, params)
+      rels = process_rels(response)
+      items = response.parsed
+
+      while rels[:next]
+        response = request(:get, rels[:next], :params => params)
+        rels = process_rels(response)
+        items.merge response.parsed do |_, current, new|
+          current.concat new
+        end
+      end
+
+      items
     end
 
     def post(path, data={})
@@ -75,6 +104,20 @@ module FreeAgent
     end
 
   private
+
+    # Finds link relations from 'Link' response header
+    #
+    # Returns an array of Relations
+    # https://github.com/lostisland/sawyer/blob/master/lib/sawyer/response.rb
+    def process_rels(response)
+      links = (response.headers["Link"] || "" ).split(', ').map do |link|
+        href, name = link.match(/<(.*?)>; rel=['"](\w+)["']/).captures
+        [name.to_sym, href]
+      end
+
+      Hash[*links.flatten]
+    end
+
 
     def request(method, path, options = {})
       if @access_token
