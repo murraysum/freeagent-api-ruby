@@ -10,7 +10,7 @@ module FreeAgent
 
     decimal_accessor :exchange_rate, :net_value, :sales_tax_value
 
-    date_accessor :dated_on, :due_on
+    date_accessor :dated_on, :due_on, :paid_on
 
     # TODO FIXME Need to rename this better
     def self.all_with_nested_items
