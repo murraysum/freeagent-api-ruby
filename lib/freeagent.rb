@@ -7,7 +7,7 @@ module FreeAgent
   require_relative 'freeagent/company'
   require_relative 'freeagent/timeline_item'
   require_relative 'freeagent/attachment'
-
+  require_relative 'freeagent/category'
   require_relative 'freeagent/contact'
   require_relative 'freeagent/project'
   require_relative 'freeagent/task'
