@@ -18,6 +18,12 @@ module FreeAgent
       Expense.filter(:view => 'recurring')
     end
 
+    def attachment
+      return nil if @attachment.nil?
+      id = extract_id @attachment['url']
+      Attachment.find(id)
+    end
+
     # TODO Implement this
     #def self.create_batch
     #
