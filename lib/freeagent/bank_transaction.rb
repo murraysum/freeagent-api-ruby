@@ -9,6 +9,12 @@ module FreeAgent
 
     date_accessor :dated_on
 
+    def bank_transaction_explanations
+      return nil if @bank_transaction_explanations.nil?
+      id = extract_id @bank_transaction_explanations.first['url']
+      BankTransactionExplanations.find(id)
+    end
+
     def self.find_all_by_bank_account(bank_account, options = {})
       options.merge!(:bank_account => bank_account)
       BankTransaction.filter(options)

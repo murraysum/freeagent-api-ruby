@@ -1,6 +1,6 @@
 module FreeAgent
   require_relative 'freeagent/client'
-  require_relative 'freeagent/errors'  
+  require_relative 'freeagent/errors'
 
   require_relative 'freeagent/resource'
   require_relative 'freeagent/user'
@@ -19,6 +19,9 @@ module FreeAgent
   require_relative 'freeagent/estimate'
   require_relative 'freeagent/expense'
   require_relative 'freeagent/bank_transaction'
+  require_relative 'freeagent/bank_transaction_explanations'
+  require_relative 'freeagent/bill'
+
   class << self
     attr_accessor :environment
     attr_accessor :debug
