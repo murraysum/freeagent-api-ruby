@@ -1,5 +1,7 @@
 .bundle
 .rvmrc
+.ruby-version
+.ruby-gemset
 example.rb
 resource_list
 
