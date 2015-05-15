@@ -1,5 +1,5 @@
 module FreeAgent
-  class BankTransactionExplanations < Resource
+  class BankTransactionExplanation < Resource
     resource :bank_transaction_explanation
 
     resource_methods :find, :filter

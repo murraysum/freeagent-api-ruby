@@ -19,7 +19,7 @@ module FreeAgent
   require_relative 'freeagent/estimate'
   require_relative 'freeagent/expense'
   require_relative 'freeagent/bank_transaction'
-  require_relative 'freeagent/bank_transaction_explanations'
+  require_relative 'freeagent/bank_transaction_explanation'
   require_relative 'freeagent/bill'
 
   class << self
