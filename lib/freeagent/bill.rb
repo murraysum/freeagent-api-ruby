@@ -9,6 +9,26 @@ module FreeAgent
 
     date_accessor :dated_on, :due_on
 
+    def self.paid_bills
+      Bill.filter(:view => "paid")
+    end
+
+    def self.open_bills
+      Bill.filter(:view => "open")
+    end
+
+    def self.overdue_bills
+      Bill.filter(:view => "overdue")
+    end
+
+    def self.open_or_overdue_bills
+      Bill.filter(:view => "open_or_overdue")
+    end
+
+    def self.recurring_bills
+      Bill.filter(:view => "recurring")
+    end
+
     def attachment
       return nil if @attachment.nil?
       id = extract_id @attachment['url']
