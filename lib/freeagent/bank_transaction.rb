@@ -10,7 +10,7 @@ module FreeAgent
     date_accessor :dated_on
 
     def bank_transaction_explanations
-      return nil if @bank_transaction_explanations.nil?
+      return [] if @bank_transaction_explanations.nil?
       @bank_transaction_explanations.map { |explanation| BankTransactionExplanation.find(extract_id(explanation['url'])) }
     end
 
