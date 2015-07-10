@@ -11,8 +11,7 @@ module FreeAgent
 
     def bank_transaction_explanations
       return nil if @bank_transaction_explanations.nil?
-      id = extract_id @bank_transaction_explanations.first['url']
-      BankTransactionExplanation.find(id)
+      @bank_transaction_explanations.map { |explanation| BankTransactionExplanation.find(extract_id(explanation['url'])) }
     end
 
     def self.find_all_by_bank_account(bank_account, options = {})
