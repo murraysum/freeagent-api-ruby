@@ -24,6 +24,12 @@ module FreeAgent
       Attachment.find(id)
     end
 
+    def user
+      return nil if @user.nil?
+      id = extract_id @user
+      User.find(id)
+    end
+
     # TODO Implement this
     #def self.create_batch
     #
