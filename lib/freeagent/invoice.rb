@@ -74,5 +74,12 @@ module FreeAgent
     #def timeline
     #
     #end
+    def contact
+      return nil if @contact.nil?
+
+      id = extract_id @contact
+      Contact.find(id)
+    end
+
   end
 end
