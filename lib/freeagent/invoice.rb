@@ -74,5 +74,20 @@ module FreeAgent
     #def timeline
     #
     #end
+
+    def contact
+      return nil if @contact.nil?
+
+      id = extract_id @contact
+      Contact.find(id)
+    end
+
+    def invoice_items
+      return [] if @invoice_items.nil?
+
+      @invoice_item_array ||= @invoice_items.map do |item|
+        InvoiceItem.new(item)
+      end
+    end
   end
 end
