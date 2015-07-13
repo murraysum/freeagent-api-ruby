@@ -1,3 +1,4 @@
+require 'ostruct'
 module FreeAgent
   class Invoice < Resource
     resource :invoice
@@ -74,6 +75,7 @@ module FreeAgent
     #def timeline
     #
     #end
+
     def contact
       return nil if @contact.nil?
 
@@ -81,5 +83,12 @@ module FreeAgent
       Contact.find(id)
     end
 
+    def invoice_items
+      return [] if @invoice_items.nil?
+
+      @invoice_item_array ||= @invoice_items.map do |item|
+        OpenStruct.new(item)
+      end
+    end
   end
 end
