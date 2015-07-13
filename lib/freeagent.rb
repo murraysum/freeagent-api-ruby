@@ -21,6 +21,7 @@ module FreeAgent
   require_relative 'freeagent/bank_transaction'
   require_relative 'freeagent/bank_transaction_explanation'
   require_relative 'freeagent/bill'
+  require_relative 'freeagent/invoice_item'
 
   class << self
     attr_accessor :environment
