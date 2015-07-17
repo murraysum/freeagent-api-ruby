@@ -27,10 +27,7 @@ module FreeAgent
     end
 
     def paid_invoice
-      return nil if @paid_invoice.nil?
-
-      id = extract_id @paid_invoice
-      Invoice.find(id)
+      Invoice.find(paid_invoice_id)
     end
 
     def paid_invoice_id
