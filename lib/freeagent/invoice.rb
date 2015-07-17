@@ -4,7 +4,7 @@ module FreeAgent
 
     resource_methods :default
 
-    attr_accessor :contact, :reference, :currency, :status, :omit_header, :payment_terms_in_days, :ec_status, :invoice_items
+    attr_accessor :contact, :reference, :currency, :status, :omit_header, :payment_terms_in_days, :ec_status, :invoice_items, :bank_transaction_explanations
 
     attr_accessor :project, :discount_percent, :written_off_date
 
@@ -52,7 +52,7 @@ module FreeAgent
     def self.find_all_by_project(project)
       Invoice.filter(:project => project)
     end
-    
+
     # FIXME Need to figure out the format of the json.
     #def send_email(email)
     #  FreeAgent.client.post("invoices/#{id}/send_email", email)
@@ -88,6 +88,10 @@ module FreeAgent
       @invoice_item_array ||= @invoice_items.map do |item|
         InvoiceItem.new(item)
       end
+    end
+
+    def bank_transaction_explanations
+      @bank_transaction_explanations ||= []
     end
   end
 end
