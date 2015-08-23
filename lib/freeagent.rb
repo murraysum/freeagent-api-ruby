@@ -2,6 +2,7 @@ module FreeAgent
   require_relative 'freeagent/client'
   require_relative 'freeagent/errors'  
 
+  require_relative 'freeagent/collection'
   require_relative 'freeagent/resource'
   require_relative 'freeagent/user'
   require_relative 'freeagent/company'
