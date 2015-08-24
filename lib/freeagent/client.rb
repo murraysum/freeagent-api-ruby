@@ -76,8 +76,10 @@ module FreeAgent
 
     def parse(request)
       request.parsed.tap do |hash|
-        request.headers['Link'].scan(/<(https:.*?)>; rel='(prev|next|first|last)'/).each do |(url, rel)|
-          hash[rel] = url
+        if link_header = request.headers['Link']
+          link_header.scan(/<(https:.*?)>; rel='(prev|next|first|last)'/).each do |(url, rel)|
+            hash[rel] = url
+          end
         end
       end
     end
