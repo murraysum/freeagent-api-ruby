@@ -59,21 +59,31 @@ module FreeAgent
     end
 
     def get(path, params={})
-      request(:get, "#{Client.site}#{path}", :params => params).parsed
+      parse(request(:get, "#{Client.site}#{path}", :params => params))
     end
 
     def post(path, data={})
-      request(:post, "#{Client.site}#{path}", :data => data).parsed
+      parse(request(:post, "#{Client.site}#{path}", :data => data))
     end
 
     def put(path, data={})
-      request(:put, "#{Client.site}#{path}", :data => data).parsed
+      parse(request(:put, "#{Client.site}#{path}", :data => data))
     end
 
     def delete(path, data={})
-      request(:delete, "#{Client.site}#{path}", :data => data).parsed
+      parse(request(:delete, "#{Client.site}#{path}", :data => data))
     end
 
+    def parse(request)
+      request.parsed.tap do |hash|
+        if link_header = request.headers['Link']
+          link_header.scan(/<(https:.*?)>; rel='(prev|next|first|last)'/).each do |(url, rel)|
+            hash[rel] = url
+          end
+        end
+      end
+    end
+    
   private
 
     def request(method, path, options = {})

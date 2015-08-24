@@ -112,8 +112,7 @@ module FreeAgent
 
     def self.define_filter
       self.define_singleton_method(:filter) do |params|
-        response = FreeAgent.client.get("#{endpoint[:plural]}/", params)
-        response[endpoint[:plural]].collect{ |r| self.new(r) }
+        Collection.new(FreeAgent.client.get("#{endpoint[:plural]}/", params), self)
       end
     end
 
