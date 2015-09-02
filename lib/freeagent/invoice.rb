@@ -8,7 +8,7 @@ module FreeAgent
 
     attr_accessor :project, :discount_percent, :written_off_date
 
-    decimal_accessor :exchange_rate, :net_value, :sales_tax_value
+    decimal_accessor :exchange_rate, :net_value, :sales_tax_value, :total_value
 
     date_accessor :dated_on, :due_on
 
