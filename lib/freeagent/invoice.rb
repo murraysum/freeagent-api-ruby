@@ -81,6 +81,10 @@ module FreeAgent
     def mark_as_cancelled
       FreeAgent.client.put("invoices/#{id}/transitions/mark_as_cancelled", nil)
     end
+    
+    def delete_invoice
+      FreeAgent.client.delete("invoices/#{id}")
+    end
 
     # TODO Write invoice timeline wrapper
     #def timeline
