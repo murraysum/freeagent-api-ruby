@@ -9,9 +9,9 @@ describe FreeAgent::Client do
     end
 
     it 'should raise client error when no client id or secret specified' do
-      expect { FreeAgent::Client.new(nil, '') }.should raise_error(FreeAgent::ClientError)
-      expect { FreeAgent::Client.new('', nil) }.should raise_error(FreeAgent::ClientError)
-      expect { FreeAgent::Client.new(nil, nil) }.should raise_error(FreeAgent::ClientError)
+      expect { FreeAgent::Client.new(nil, '') }.to raise_error(FreeAgent::ClientError)
+      expect { FreeAgent::Client.new('', nil) }.to raise_error(FreeAgent::ClientError)
+      expect { FreeAgent::Client.new(nil, nil) }.to raise_error(FreeAgent::ClientError)
     end
   end
 
@@ -114,7 +114,7 @@ describe FreeAgent::Client do
 
     it 'should raise client error when redirect not specified' do
       fetch_access_token = expect {@client.fetch_access_token('auth_code', {})}
-      fetch_access_token.should raise_error(FreeAgent::ClientError)
+      fetch_access_token.to raise_error(FreeAgent::ClientError)
     end
   end
 

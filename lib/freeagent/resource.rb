@@ -28,17 +28,17 @@ module FreeAgent
       vars = to_hash.collect { |k,v| "#{k}=#{v.inspect}" }
      "#<#{self.class}: #{vars.join(', ')}>"
     end
-    
+
     def to_hash
       hash = {}
       instance_variables.each {|var| hash[var.to_s.delete("@")] = instance_variable_get(var) }
       hash
     end
-    
+
     def to_json
       MultiJson.encode(to_hash)
     end
-    
+
     class << self
       attr_accessor :endpoint
     end
@@ -64,7 +64,7 @@ module FreeAgent
         define_delete if args.include? :delete
       end
     end
-    
+
     def self.decimal_accessor(*args)
       decimal_reader(*args)
       decimal_writer(*args)
@@ -123,7 +123,7 @@ module FreeAgent
           response = FreeAgent.client.get("#{endpoint[:plural]}/#{id}")
           self.new(response[endpoint[:single]])
         rescue FreeAgent::ApiError => error
-          raise error if FreeAgent.debug 
+          raise error if FreeAgent.debug
           nil
         end
       end
@@ -136,19 +136,18 @@ module FreeAgent
         self.new(response[endpoint[:single]])
       end
 
-      define_method(:save) do
-        begin
-          data = { self.class.endpoint[:single].to_sym => self.to_hash }
-          if persisted?
-            FreeAgent.client.put("#{self.class.endpoint[:plural]}/#{id}", data)            
-          else
-            FreeAgent.client.post(self.class.endpoint[:plural], data)
-          end
-          true
-        rescue FreeAgent::ApiError => error
-          false
-        end
+     define_method(:save) do
+       data = { self.class.endpoint[:single].to_sym => self.to_hash }
+       response = nil
+         if persisted?
+           response = FreeAgent.client.put("#{self.class.endpoint[:plural]}/#{id}", data)
+           response = FreeAgent.client.get("#{self.class.endpoint[:plural]}/#{id}")
+         else
+           response = FreeAgent.client.post(self.class.endpoint[:plural], data)
+         end
+         self.class.new(response[self.class.endpoint[:single]])
       end
+
     end
 
     def self.define_update
